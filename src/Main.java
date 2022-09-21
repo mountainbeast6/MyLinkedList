@@ -5,13 +5,9 @@ public class Main {
         list.addFirst(5);
         list.addFirst(53);
         list.addFirst(54);
-        list.addFirst(51);
-        list.addFirst(57);
+        list.removeInt(3);
         System.out.println(list);
-        list.addLast(4);
+        list.addIndex(1,2);
         System.out.println(list);
-        list.removeLast();
-        System.out.println(list);
-
     }
 }
