@@ -1,49 +1,71 @@
-public class MyLinkedList<T>{
-    private MyListNode<T> first;
-    private MyListNode<T> last;
+public class DoublyLinkedList<T> {
+    private DoublyLinkedNode<T> first;
+    private DoublyLinkedNode<T> last;
     int size=0;
-    public MyLinkedList(){
+    public DoublyLinkedList(){
         first=null;
         last=null;
     }
     public void addFirst(T data){
-        MyListNode<T>temp = new MyListNode<>(data);
+        DoublyLinkedNode<T>temp = new DoublyLinkedNode<>(data);
         if(first==null&&last==null){
             first =temp;
             last=temp;
         }
         else {
             temp.setNext(first);
+            first.setPrev(temp);
             first=temp;
         }
         size++;
     }
     public void addLast(T data){
-        MyListNode<T>temp = new MyListNode<>(data);
+        DoublyLinkedNode<T>temp = new DoublyLinkedNode<>(data);
         if(first==null&&last==null){
             first=temp;
         }
         else{
             last.setNext(temp);
+            temp.setPrev(last);
         }
         last=temp;
         size++;
     }
-   public T removeLast(){
-       MyListNode<T>temp1 = first;
-       MyListNode<T>temp2 = temp1.getNext();
-       for(int i=0; i<size-2;i++){
-            temp1=temp2;
-            temp2=temp2.getNext();
+    public T removeFirst(){
+        DoublyLinkedNode<T>temp1 = first;
+        if (first==null){
+            return null;
         }
-       temp1.setNext(null);
-       size--;
-       return temp2.getData();
+        if (first==last){
+            first=null;
+            last=null;
+            return temp1.getData();
+        }
+        first=first.getNext();
+        size--;
+        return temp1.getData();
+    }
+    public T removeLast(){
+        if(last!=null){
+            T send =last.getData();
+            if(first==last) {
+                first=null;
+                last=null;
+            }
+            else{
+                DoublyLinkedNode<T>temp = last.getPrev();
+                temp.setNext(null);
+                last=temp;
+            }
+            size--;
+            return send;
+        }
+        return null;
     }
     public void addIndex(int loc, T data){
-        MyListNode<T>temp1 = first;
-        MyListNode<T>temp2 = temp1.getNext();
-        MyListNode<T>temp3 = new MyListNode<>(data);
+        DoublyLinkedNode<T>temp1 = first;
+        DoublyLinkedNode<T>temp2 = temp1.getNext();
+        DoublyLinkedNode<T>temp3 = new DoublyLinkedNode<>(data);
         if(loc==1) {
             addFirst(data);
         }
@@ -57,24 +79,18 @@ public class MyLinkedList<T>{
             }
             temp1.setNext(temp3);
             temp3.setNext(temp2);
+            temp2.setPrev(temp3);
+            temp3.setPrev(temp1);
         }
         size++;
     }
-
-    public T removeFirst(){
-        MyListNode<T>temp1 = first;
-        first=first.getNext();
-        size--;
-        return temp1.getData();
-    }
-
     public T removeInt(int loc){
         if(size==loc){
             return removeLast();
 
         }
         else if(loc>size){
-         throw new NullPointerException("Too big of a number dumbass");
+            throw new NullPointerException("Too big of a number dumbass");
         }
         else if (loc<=0){
             throw new NullPointerException("Too small of a number dumbass");
@@ -83,31 +99,26 @@ public class MyLinkedList<T>{
             return(removeFirst());
         }
         else if(size<3){
-            MyListNode<T> temp1 = first.getNext();
+            DoublyLinkedNode<T> temp1 = first.getNext();
             first.setNext(last);
             return temp1.getData();
         }
         else {
-            MyListNode<T> temp1 = first;
-            MyListNode<T> temp2 = temp1.getNext();
-            MyListNode<T> temp3 = temp2.getNext();
+            DoublyLinkedNode<T> temp1 = first;
+            DoublyLinkedNode<T> temp2 = temp1.getNext();
             for (int i = 0; i < loc - 2; i++) {
                 temp1 = temp2;
                 temp2 = temp2.getNext();
-                temp3 = temp3.getNext();
             }
-            temp1.setNext(temp3);
+            temp1.setNext(temp2.getNext());
+            temp2.getNext().setPrev(temp1);
             size--;
             return temp2.getData();
         }
     }
-
-    public int getSize(){
-        return size;
-    }
     public String toString() {
         String out ="";
-        MyListNode<T>current=first;
+        DoublyLinkedNode<T>current=first;
         while(current!=null){
             out+=current.getData()+"=>";
             current= current.getNext();
